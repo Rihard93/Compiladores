@@ -1,0 +1,29 @@
+package minic;
+import static minic.Token.*;
+%%
+%class Lexer
+%type Token
+%line
+%char
+%column
+ESPACIO = [ \n\t\r]
+RESERVADAS = "void" | "int" | "double"| "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "New" | "NewArray"
+CARACTERES =  "+" | "-" | "/" | "%" | "<" | "<=" | ">" | ">=" | "=" | "==" | "!=" | "&&" | "||" | "!" | ";" | "," | "." | "[" | "]" | "(" | ")" | "{" | "}" | "[]" | "()" | "{}"
+%{
+        public String analizar;
+        public int linea,columna,chars;
+%}
+%%
+{ESPACIO} {/*Ignore*/}
+
+/* PALABRAS RESERVADAS */
+{RESERVADAS} {analizar=yytext(); linea=yyline; columna=yycolumn; chars=yychar; return Palabra_Reservada;}
+
+/* IDENTIFICADORES */
+[a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; chars=yychar; return Identificador;}
+
+/* NUMERICOS */
+[0-9]+ {analizar=yytext(); linea=yyline; columna=yycolumn; chars=yychar; return Numero_Entero;}
+
+/* ERROR */
+. {analizar=yytext(); linea=yyline; columna=yycolumn; chars=yychar; return ERROR;}
