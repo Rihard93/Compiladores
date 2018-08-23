@@ -6,7 +6,9 @@
 package minic;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -21,6 +23,7 @@ public class Main extends javax.swing.JFrame {
     public File Entrada,S1,S2;
     public String Ruta,Ruta1,Ruta2;
     Reader Lector;
+    boolean Correcto;
 
     /**
      * Creates new form Main
@@ -43,7 +46,7 @@ public class Main extends javax.swing.JFrame {
         btnCarga = new javax.swing.JButton();
         btnAnalizar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
         txtInfo = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -79,7 +82,7 @@ public class Main extends javax.swing.JFrame {
         txtInfo.setColumns(20);
         txtInfo.setRows(5);
         txtInfo.setEnabled(false);
-        jScrollPane1.setViewportView(txtInfo);
+        jScrollPane2.setViewportView(txtInfo);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,14 +96,14 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
-                            .addComponent(btnCarga, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCarga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtRuta))
-                            .addComponent(btnAnalizar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                            .addComponent(btnAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -116,8 +119,8 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btnAnalizar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -129,8 +132,8 @@ public class Main extends javax.swing.JFrame {
 
         String Direccion = System.getProperty("user.home");
         JFileChooser Seleccionar = new JFileChooser(Direccion + "/Desktop");
-        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.frag)", "frag"));
         Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.txt)", "txt"));
+        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.frag)", "frag"));        
         Seleccionar.setAcceptAllFileFilterUsed(false);
         Seleccionar.showDialog(this,"Seleccionar");
         Entrada = Seleccionar.getSelectedFile();
@@ -153,8 +156,75 @@ public class Main extends javax.swing.JFrame {
 
     public void AnalizarArchivo() throws IOException
     {
+       // Formato(Ruta);
+        FileInputStream Leer = new FileInputStream(Ruta);
+        Lector = new InputStreamReader(Leer);
+        Lexer lexer = new Lexer(Lector);
+        String Resultado = "";
+        
+        while (true)
+        {
+            Token token = lexer.yylex();
+            
+            if (token == null) // Cuando el token sea nulo, se detiene el ciclo
+            {
+                Resultado = Resultado + "*** FIN DEL ARCHIVO ***";
+                txtInfo.setText(Resultado);
+                //Finalizar(Resultado); //Metodo para escribir el archivo de salida
+                break;                
+            }
+            else
+            {
+                switch (token)
+                {
+                    case ERROR:
+                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Caracter no reconocido: " + lexer.analizar + "\n";                        
+                        break;
+                        
+                    case Palabra_Reservada:                        
+                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Palabra Reservada " + "\n";
+                        break;
+                        
+                    case Constante_Booleana:
+                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Constante Booleana " + "\n";
+                        break;
+                        
+                    case Identificador:
+                        if (lexer.analizar.length() <= 31)
+                        {
+                            Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Identificador " + "\n";
+                        }
+                        else
+                        {
+                            Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Identificador Truncado (Mayor a 31 caracteres): " + lexer.analizar.substring(0,30)+ "\n"; 
+                        }
+                        break;
+                        
+                    case Numero_Entero:
+                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Numero Entero " + " " + "(Valor = " + lexer.analizar + ")" + "\n";
+                        break;
+                        
+                    case Numero_Hexadecimal:
+                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Numero Hexadecimal "+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
+                        break;
+                        
+                    default:
+                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " + token + "\n";
+                        break;
+                }                    
+            }
+        }
+    }
+    
+    public void Formato(String Ruta) throws IOException
+    {
         
     }
+    
+    public void Finalizar(String Resultado) throws IOException
+    {
+        
+    }    
     
     /**
      * @param args the command line arguments
@@ -196,7 +266,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btnCarga;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea txtInfo;
     private javax.swing.JTextField txtRuta;
     // End of variables declaration//GEN-END:variables
