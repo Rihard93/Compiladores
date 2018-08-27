@@ -25,11 +25,21 @@ BOOLEANAS = true | false;
 /* OPERADORES Y CARACTERES */
 {CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
 
+/* STRINGS */
+\"[^\"](\w|\t|\ )*\" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
+
+/* COMENTARIOS */ 
+"/*" [^*] ~"*/" {/*Ignore*/}
+"//" [^\r\n]+  {/*Ignore*/}
+
 /* CONSTATES BOOLEANAS */
 {BOOLEANAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Constante_Booleana;}
 
 /* NUMEROS ENTEROS */
 [0-9]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Entero;}
+
+/* CONSTANTE DOUBLE (NUMEROS) */
+[0-9]+ "." ([0-9]+ | [0-9]+(E | e)"+"[0-9]+ | (E | e)"+"[0-9]+ )? {analizar=yytext(); linea=yyline; columna=yycolumn; return Double;}
 
 /* NUMEROS HEXADECIMALES */
 (0x | 0X )[0-9|A-F|a-f]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Hexadecimal;}

@@ -20,10 +20,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Main extends javax.swing.JFrame {
     
-    public File Entrada,S1,S2;
-    public String Ruta,Ruta1,Ruta2;
+    public File Entrada,S1;
+    public String Ruta,Ruta1;
     Reader Lector;
-    boolean Correcto;
+    
 
     /**
      * Creates new form Main
@@ -208,6 +208,10 @@ public class Main extends javax.swing.JFrame {
                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Numero Hexadecimal "+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
                         break;
                         
+                    case Double:
+                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " +token+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
+                        break;
+                        
                     default:
                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " + token + "\n";
                         break;
@@ -221,6 +225,11 @@ public class Main extends javax.swing.JFrame {
         
     }
     
+    public void Archivos()
+    {
+        Ruta1 = Ruta.substring(0, Ruta.length()-3);
+        Ruta1 = Ruta1 + ".out";
+    }
     public void Finalizar(String Resultado) throws IOException
     {
         
