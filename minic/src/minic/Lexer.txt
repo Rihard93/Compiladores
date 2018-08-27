@@ -7,7 +7,7 @@ import static minic.Token.*;
 %column
 ESPACIO = [ \n\t\r]
 RESERVADAS = void | int | double | bool | string | class | interface | null | this | extends | implements | for | while | if | else | return | break | New | NewArray
-CARACTERES =  "+" | "-" | "/" | "%" | "<" | "<=" | ">" | ">=" | "=" | "==" | "!=" | "&&" | "||" | "!" | ";" | "," | "." | "[" | "]" | "(" | ")" | "{" | "}" | "[]" | "()" | "{}"
+CARACTERES =  "+" | "-" | "*" |"/" | "%" | "<" | "<=" | ">" | ">=" | "=" | "==" | "!=" | "&&" | "||" | "!" | ";" | "," | "." | "[" | "]" | "(" | ")" | "{" | "}" | "[]" | "()" | "{}"
 BOOLEANAS = true | false;
 %{
         public String analizar;
