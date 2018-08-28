@@ -22,6 +22,10 @@ BOOLEANAS = true | false;
 /* IDENTIFICADORES */
 [a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;}
 
+/* ERRORES */
+"/*" [^*]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
+\"[^\"](\w|\t|\ )* {analizar=yytext(); linea=yyline; columna=yycolumn; return String_Incompleto;}
+
 /* OPERADORES Y CARACTERES */
 {CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
 
@@ -29,8 +33,8 @@ BOOLEANAS = true | false;
 \"[^\"](\w|\t|\ )*\" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
 
 /* COMENTARIOS */ 
-"/*" [^*] ~"*/" {/*Ignore*/}
-"//" [^\r\n]+  {/*Ignore*/}
+"/*" [^*] ~"*/" {/*Ignore*/}  /* COMENTARIO MULTILINEA */
+"//" [^\r\n]+  {/*Ignore*/}   /* COMENTARIO DE UNA LINEA */
 
 /* CONSTATES BOOLEANAS */
 {BOOLEANAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Constante_Booleana;}

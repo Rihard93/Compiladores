@@ -7,6 +7,7 @@ package minic;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -52,7 +53,6 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MiniC");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setPreferredSize(new java.awt.Dimension(406, 351));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jLabel1.setText("Ruta");
@@ -102,7 +102,7 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtRuta))
-                            .addComponent(btnAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                            .addComponent(btnAnalizar, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addContainerGap())))
         );
@@ -120,7 +120,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -156,7 +156,7 @@ public class Main extends javax.swing.JFrame {
 
     public void AnalizarArchivo() throws IOException
     {
-       // Formato(Ruta);
+        Archivos();
         FileInputStream Leer = new FileInputStream(Ruta);
         Lector = new InputStreamReader(Leer);
         Lexer lexer = new Lexer(Lector);
@@ -170,12 +170,13 @@ public class Main extends javax.swing.JFrame {
             {
                 Resultado = Resultado + "*** FIN DEL ARCHIVO ***";
                 txtInfo.setText(Resultado);
-                //Finalizar(Resultado); //Metodo para escribir el archivo de salida
+                Finalizar(Resultado); //Metodo para escribir el archivo de salida
+                JOptionPane.showMessageDialog(null, "Ubicacion del archivo .out:" + "\n" + Ruta1, "Informacion" , JOptionPane.INFORMATION_MESSAGE);
                 break;                
             }
             else
             {
-                switch (token)
+                switch (token) //Cases para cado token que retorne al analizador lexico
                 {
                     case ERROR:
                         Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Caracter no reconocido: " + lexer.analizar + "\n";                        
@@ -196,7 +197,7 @@ public class Main extends javax.swing.JFrame {
                         }
                         else
                         {
-                            Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Identificador Truncado (Mayor a 31 caracteres): " + lexer.analizar.substring(0,30)+ "\n"; 
+                            Resultado = Resultado + lexer.analizar.substring(0, 30) + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.substring(0,30).length()) + "   " + "Token: Identificador Truncado " + "\n"; 
                         }
                         break;
                         
@@ -212,27 +213,32 @@ public class Main extends javax.swing.JFrame {
                          Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " +token+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
                         break;
                         
+                    case Comentario_Incompleto:
+                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Comentario Incompleto - Falta cierre de comentario multilinea " + "\n";     
+                        break;
+                        
+                    case String_Incompleto:
+                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "String  Incompleto - Falta una comilla doble " + "\n";     
+                        break;
+                        
                     default:
                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " + token + "\n";
                         break;
                 }                    
             }
         }
-    }
-    
-    public void Formato(String Ruta) throws IOException
-    {
-        
-    }
-    
-    public void Archivos()
+    }    
+
+    public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;
     {
         Ruta1 = Ruta.substring(0, Ruta.length()-3);
-        Ruta1 = Ruta1 + ".out";
+        Ruta1 = Ruta1 + "out";
     }
-    public void Finalizar(String Resultado) throws IOException
-    {
-        
+    public void Finalizar(String Resultado) throws IOException //Metodo que escribe en el archivo de salida
+    {       
+        FileWriter Escritor = new FileWriter(new File(Ruta1));
+        Escritor.write(Resultado);
+        Escritor.close();              
     }    
     
     /**
