@@ -10,5 +10,5 @@ package minic;
  * @author Ricardo
  */
 public enum Token {
-    Palabra_Reservada,Constante_Booleana,Identificador, Numero_Entero,Double,Numero_Hexadecimal,Caracter,String,Comentario_Incompleto,String_Incompleto,ERROR;    
+    Palabra_Reservada,Constante_Booleana,Identificador, Numero_Entero,Double,Numero_Hexadecimal,Caracter,String,Comentario_Incompleto,ERROR;    
 }

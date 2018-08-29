@@ -180,10 +180,9 @@ class Lexer {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\16\3\3\4\2\1\3\4\1\1"+
-    "\2\5\2\3\1\6\17\3\2\0\1\7\1\10\1\0"+
-    "\1\3\1\6\14\3\1\6\1\11\1\2\1\12\1\0"+
-    "\1\13\10\3\2\0\7\3\1\0\1\10\2\3\1\14"+
-    "\5\3";
+    "\2\5\2\3\1\6\17\3\3\0\1\7\1\0\1\3"+
+    "\1\6\14\3\1\6\1\10\1\2\1\11\1\0\1\12"+
+    "\10\3\2\0\7\3\1\0\1\7\2\3\1\13\5\3";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[98];
@@ -375,7 +374,7 @@ class Lexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\2\11\16\1\1\11\34\1\2\0\2\1\1\0"+
+    "\1\0\2\11\16\1\1\11\34\1\3\0\1\1\1\0"+
     "\21\1\1\11\1\0\11\1\2\0\7\1\1\0\3\1"+
     "\1\11\5\1";
 
@@ -833,51 +832,47 @@ class Lexer {
           case 1: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return ERROR;
             }
-          case 13: break;
+          case 12: break;
           case 2: 
             { /*Ignore*/
             }
-          case 14: break;
+          case 13: break;
           case 3: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;
             }
-          case 15: break;
+          case 14: break;
           case 4: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;
             }
-          case 16: break;
+          case 15: break;
           case 5: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Entero;
             }
-          case 17: break;
+          case 16: break;
           case 6: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Palabra_Reservada;
             }
-          case 18: break;
+          case 17: break;
           case 7: 
-            { analizar=yytext(); linea=yyline; columna=yycolumn; return String_Incompleto;
-            }
-          case 19: break;
-          case 8: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Double;
             }
-          case 20: break;
-          case 9: 
+          case 18: break;
+          case 8: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;
             }
-          case 21: break;
-          case 10: 
+          case 19: break;
+          case 9: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return String;
             }
-          case 22: break;
-          case 11: 
+          case 20: break;
+          case 10: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Hexadecimal;
             }
-          case 23: break;
-          case 12: 
+          case 21: break;
+          case 11: 
             { analizar=yytext(); linea=yyline; columna=yycolumn; return Constante_Booleana;
             }
-          case 24: break;
+          case 22: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

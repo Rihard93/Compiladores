@@ -215,12 +215,8 @@ public class Main extends javax.swing.JFrame {
                         
                     case Comentario_Incompleto:
                         Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Comentario Incompleto - Falta cierre de comentario multilinea " + "\n";     
-                        break;
-                        
-                    case String_Incompleto:
-                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "String  Incompleto - Falta una comilla doble " + "\n";     
-                        break;
-                        
+                        break;                    
+
                     default:
                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " + token + "\n";
                         break;

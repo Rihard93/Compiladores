@@ -24,7 +24,6 @@ BOOLEANAS = true | false;
 
 /* ERRORES */
 "/*" [^*]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
-\"[^\"](\w|\t|\ )* {analizar=yytext(); linea=yyline; columna=yycolumn; return String_Incompleto;}
 
 /* OPERADORES Y CARACTERES */
 {CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
