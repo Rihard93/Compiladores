@@ -227,7 +227,7 @@ public class Main extends javax.swing.JFrame {
 
     public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;
     {
-        Ruta1 = Ruta.substring(0, Ruta.length()-3);
+        Ruta1 = Ruta.substring(0, Ruta.length()-4);
         Ruta1 = Ruta1 + "out";
     }
     public void Finalizar(String Resultado) throws IOException //Metodo que escribe en el archivo de salida
