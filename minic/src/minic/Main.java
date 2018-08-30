@@ -132,8 +132,8 @@ public class Main extends javax.swing.JFrame {
 
         String Direccion = System.getProperty("user.home");
         JFileChooser Seleccionar = new JFileChooser(Direccion + "/Desktop");
-        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.txt)", "txt"));
-        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.frag)", "frag"));        
+        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.frag)", "frag"));
+        Seleccionar.addChoosableFileFilter(new FileNameExtensionFilter("Archivo de Texto (.txt)", "txt"));                
         Seleccionar.setAcceptAllFileFilterUsed(false);
         Seleccionar.showDialog(this,"Seleccionar");
         Entrada = Seleccionar.getSelectedFile();
