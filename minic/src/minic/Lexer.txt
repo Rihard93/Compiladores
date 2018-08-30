@@ -29,10 +29,10 @@ BOOLEANAS = true | false;
 {CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
 
 /* STRINGS */
-\" [^] ~ \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
+\" [^\r\n]+  \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
 
 /* COMENTARIOS */ 
-"/*" [^] ~"*/" {/*Ignore*/}  /* COMENTARIO MULTILINEA */
+"/*" [^]* "*/" {/*Ignore*/}  /* COMENTARIO MULTILINEA */
 "//" [^\r\n]+  {/*Ignore*/}   /* COMENTARIO DE UNA LINEA */
 
 /* CONSTATES BOOLEANAS */
