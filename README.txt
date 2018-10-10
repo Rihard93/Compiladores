@@ -1,4 +1,4 @@
-miniC - Analizador Lexico
+﻿miniC - Fase #2
 
 /* ESTRUCTURA GENERAL DEL PROGRAMA */
 

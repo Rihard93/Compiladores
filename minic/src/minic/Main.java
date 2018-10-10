@@ -156,90 +156,33 @@ public class Main extends javax.swing.JFrame {
 
     public void AnalizarArchivo() throws IOException
     {
-        Archivos();
-        FileInputStream Leer = new FileInputStream(Ruta);
-        Lector = new InputStreamReader(Leer);
-        Lexer lexer = new Lexer(Lector);
-        String Resultado = "";
-        
-        while (true)
-        {
-            Token token = lexer.yylex();
-            
-            if (token == null) // Cuando el token sea nulo, se detiene el ciclo
-            {
-                Resultado = Resultado + "*** FIN DEL ARCHIVO ***";
-                txtInfo.setText(Resultado);
-                Finalizar(Resultado); //Metodo para escribir el archivo de salida
-                JOptionPane.showMessageDialog(null, "Ubicacion del archivo .out:" + "\n" + Ruta1, "Informacion" , JOptionPane.INFORMATION_MESSAGE);
-                break;                
-            }
-            else
-            {
-                switch (token) //Cases para cado token que retorne al analizador lexico
-                {
-                    case ERROR:
-                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Caracter no reconocido: " + lexer.analizar + "\n";                        
-                        break;
-                        
-                    case Palabra_Reservada:                        
-                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Palabra Reservada " + "\n";
-                        break;
-                        
-                    case Constante_Booleana:
-                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Constante Booleana " + "\n";
-                        break;
-                        
-                    case Identificador:
-                        if (lexer.analizar.length() <= 31)
-                        {
-                            Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Identificador " + "\n";
-                        }
-                        else
-                        {
-                            Resultado = Resultado + lexer.analizar.substring(0, 30) + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.substring(0,30).length()) + "   " + "Token: Identificador Truncado " + "\n"; 
-                        }
-                        break;
-                        
-                    case Numero_Entero:
-                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Numero Entero " + " " + "(Valor = " + lexer.analizar + ")" + "\n";
-                        break;
-                        
-                    case Numero_Hexadecimal:
-                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: Numero Hexadecimal "+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
-                        break;
-                        
-                    case Double:
-                         Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " +token+ " " + "(Valor = " + lexer.analizar + ")" + "\n";
-                        break;
-                        
-                    case Comentario_Incompleto:
-                        Resultado = Resultado + " *** ERROR LINEA " + (lexer.linea +1) + " ***" + "   " + "Comentario Incompleto - Falta cierre de comentario multilinea " + "\n";     
-                        break;                    
+        String[] ArchivoPrueba = {Ruta};
+        Sintaxis.main(ArchivoPrueba);
+        System.out.println("Archivo Ejecutado!!!");
+    }
+    
+  
 
-                    default:
-                        Resultado = Resultado + lexer.analizar + "   " + "Linea: " +(lexer.linea +1) + "   " + "Columna: " + (lexer.columna+1) + "-" + ((lexer.columna + 1) + lexer.analizar.length()-1) + "   " + "Token: " + token + "\n";
-                        break;
-                }                    
-            }
-        }
-    }    
-
+    
+    
+   /** METODOS DESHABILITADOS
     public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;
     {
         Ruta1 = Ruta.substring(0, Ruta.length()-4);
         Ruta1 = Ruta1 + "out";
-    }
+    }   
+    
     public void Finalizar(String Resultado) throws IOException //Metodo que escribe en el archivo de salida
     {       
         FileWriter Escritor = new FileWriter(new File(Ruta1));
         Escritor.write(Resultado);
         Escritor.close();              
     }    
-    
+   /*
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -278,7 +221,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea txtInfo;
+    public static javax.swing.JTextArea txtInfo;
     private javax.swing.JTextField txtRuta;
     // End of variables declaration//GEN-END:variables
 }

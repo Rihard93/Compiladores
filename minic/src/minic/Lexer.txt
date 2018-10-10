@@ -1,51 +1,137 @@
 package minic;
-import static minic.Token.*;
+//import static minic.Token.*;
+import java_cup.runtime.*;
+import static minic.Main.txtInfo;
 %%
+
 %class Lexer
-%type Token
 %line
 %column
+%cup
+
 ESPACIO = [ \n\t\r]
-RESERVADAS = void | int | double | bool | string | class | interface | null | this | extends | implements | for | while | if | else | return | break | New | NewArray
-CARACTERES =  "+" | "-" | "*" |"/" | "%" | "<" | "<=" | ">" | ">=" | "=" | "==" | "!=" | "&&" | "||" | "!" | ";" | "," | "." | "[" | "]" | "(" | ")" | "{" | "}" | "[]" | "()" | "{}"
+//RESERVADAS = void | int | double | bool | string | class | interface | null | this | extends | implements | for | while | if | else | return | break | New | NewArray
+//CARACTERES =  "+" | "-" | "*" |"/" | "%" | "<" | "<=" | ">" | ">=" | "=" | "==" | "!=" | "&&" | "||" | "!" | ";" | "," | "." | "[" | "]" | "(" | ")" | "{" | "}" | "[]" | "()" | "{}"
 BOOLEANAS = true | false;
 %{
-        public String analizar;
-        public int linea,columna;
+        //public String analizar;
+        //public int linea,columna;
+        
+        private Symbol symbol(int type)
+        {
+            return new Symbol(type, yyline, yycolumn);
+        }
+
+        private Symbol symbol(int type, Object value)
+        {
+            return new Symbol(type, yyline, yycolumn, value);
+        }
 %}
+
 %%
 {ESPACIO} {/*Ignore*/}
 
 /* PALABRAS RESERVADAS */
-{RESERVADAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Palabra_Reservada;}
+//{RESERVADAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Palabra_Reservada;}
+
+"void" { return symbol(sym.VOID); }
+"int" {return symbol(sym.INT); }
+"double" { return symbol(sym.DOUBLE); }
+"bool" { return symbol(sym.BOOL); }
+"string" { return symbol(sym.STRING); }
+"class" { return symbol(sym.CLASS); }
+"interface" { return symbol(sym.INTERFACE); }
+"null" { return symbol(sym.NULL); }
+"this" { return symbol(sym.THIS); }
+"extends" { return symbol(sym.EXTENDS); }
+"implements" { return symbol(sym.IMPLEMENTS); }
+"for" { return symbol(sym.FOR); }
+"while" { return symbol(sym.WHILE); }
+"if" { return symbol(sym.IF); }
+"else" { return symbol(sym.ELSE); }
+"return" { return symbol(sym.RETURN); }
+"break" { return symbol(sym.BREAK); }
+"New" { return symbol(sym.NEW); }
+"NewArray" { return symbol(sym.NEWARRAY); }
+"Print" { return symbol(sym.PRINT); }
+"ReadInteger" { return symbol(sym.READINTEGER); }
+"ReadLine" { return symbol(sym.READLINE); }
+"Malloc" { return symbol(sym.MALLOC); }
+"GetByte" { return symbol(sym.GETBYTE); }
+"SetByte" { return symbol(sym.SETBYTE); }
 
 /* IDENTIFICADORES */
-[a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;}
+//[a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;}
 
-/* ERRORES */
-"/*" [^*]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
+[a-zA-Z][a-zA-Z0-9_]* { return symbol(sym.IDENT, yytext()); }
+
+/* COMENTARIO INCOMPLETO */
+//"/*" [^*]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
+
+"/*" [^*]+ {System.out.print(" *** ERROR LINEA " + (yyline +1) + " ***" + "   " + "Comentario Incompleto - Falta cierre de comentario multilinea " + "\n"); }
+
 
 /* OPERADORES Y CARACTERES */
-{CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
+//{CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
+
+"+" {return symbol(sym.PLUS); }
+"-" {return symbol(sym.MINUS); }
+"*" {return symbol(sym.TIMES); }
+"/" {return symbol(sym.DIV); }
+"%" {return symbol(sym.MOD); }
+"<" {return symbol(sym.LESS); }
+"<=" {return symbol(sym.LESSEQ); }
+">" {return symbol(sym.GREATER); }
+">=" {return symbol(sym.GREATEREQ); }
+"=" {return symbol(sym.EQUALS); }
+"==" {return symbol(sym.EQTO); }
+"!=" {return symbol(sym.NOTEQ); }
+"&&" {return symbol(sym.AMPERSONS); }
+"||" {return symbol(sym.OR); }
+"!" {return symbol(sym.EXCLAM); }
+";" {return symbol(sym.SEMI); }
+"," {return symbol(sym.COMMA); }
+"." {return symbol(sym.PERIOD); }
+"[" {return symbol(sym.LCOR); }
+"]" {return symbol(sym.RCOR); }
+"(" {return symbol(sym.LPAR); }
+")" {return symbol(sym.RPAR); }
+"{" {return symbol(sym.LLLAV); }
+"}" {return symbol(sym.RLLAV); }
+"[]" {return symbol(sym.CORS); }
+"()" {return symbol(sym.PARS); }
+"{}" {return symbol(sym.LLAVS); }
 
 /* STRINGS */
-\" [^\r\n]+  \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
+// \" [^\r\n]+  \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
+
+\" [^\r\n]+  \" { return symbol(sym.stringConstant, yytext()); }
 
 /* COMENTARIOS */ 
 "/*" [^*] ~ "*/"  {/*Ignore*/}  /* COMENTARIO MULTILINEA */
 "//" [^\r\n]+  {/*Ignore*/}   /* COMENTARIO DE UNA LINEA */
 
 /* CONSTATES BOOLEANAS */
-{BOOLEANAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Constante_Booleana;}
+//{BOOLEANAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Constante_Booleana;}
+
+{BOOLEANAS} {return symbol(sym.boolConstant, yytext()); }
 
 /* NUMEROS ENTEROS */
-[0-9]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Entero;}
+//[0-9]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Entero;}
+
+[0-9]+ {return symbol(sym.intConstant, new Integer(yytext())); }
 
 /* CONSTANTE DOUBLE (NUMEROS) */
-[0-9]+ "." ([0-9]+ | [0-9]+(E | e) ("+")? [0-9]+ | (E | e) ("+")? [0-9]+ )? {analizar=yytext(); linea=yyline; columna=yycolumn; return Double;}
+//[0-9]+ "." ([0-9]+ | [0-9]+(E | e) ("+")? [0-9]+ | (E | e) ("+")? [0-9]+ )? {analizar=yytext(); linea=yyline; columna=yycolumn; return Double;}
+
+[0-9]+ "." ([0-9]+ | [0-9]+(E | e) ("+")? [0-9]+ | (E | e) ("+")? [0-9]+ )? {return symbol(sym.doubleConstant, yytext()); }
 
 /* NUMEROS HEXADECIMALES */
-(0x | 0X )[0-9|A-F|a-f]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Hexadecimal;}
+//(0x | 0X )[0-9|A-F|a-f]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Numero_Hexadecimal;}
+
+(0x | 0X )[0-9|A-F|a-f]+ {return symbol(sym.hexConstant, yytext()); }
 
 /* ERROR */
-. {analizar=yytext(); linea=yyline; columna=yycolumn; return ERROR;}
+//. {analizar=yytext(); linea=yyline; columna=yycolumn; return ERROR;}
+
+. {System.out.print(" *** ERROR LINEA " + (yyline +1) + " ***" + "   " + "Caracter no reconocido " + yytext() + "\n"); }
