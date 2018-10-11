@@ -66,6 +66,7 @@ BOOLEANAS = true | false;
 
 /* COMENTARIO INCOMPLETO */
 //"/*" [^*]+ {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
+//" {analizar=yytext(); linea=yyline; columna=yycolumn; return Comentario_Incompleto;}
 
 "/*" [^*]+ {System.out.print(" *** ERROR LINEA " + (yyline +1) + " ***" + "   " + "Comentario Incompleto - Falta cierre de comentario multilinea " + "\n"); }
 
