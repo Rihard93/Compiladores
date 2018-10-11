@@ -49,7 +49,7 @@ terminal VOID, INT, DOUBLE, BOOL, STRING, CLASS, INTERFACE, NULL, THIS, EXTENDS,
 terminal Object intConstant, doubleConstant, boolConstant, stringConstant, hexConstant;
 
 /*--------------NO TERMINALES-----------*/
-non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtVar, StmtStmt, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont;
+non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont;
 
 /*--------------PRECEDENCIAS-----------*/
 precedence left EQUALS;
@@ -118,13 +118,15 @@ Prototype ::= Type ProtCont
 
 ProtCont ::= IDENT LPAR Formals RPAR SEMI ;
 
-StmtBlock ::= LLLAV StmtVar StmtStmt RLLAV ;
+StmtBlock ::= LLLAV StmtCont RLLAV ;
 
-StmtVar ::= StmtVar VariableDecl
+StmtCont ::= StmtEnd StmtCont
 | /* ε */ ;
 
-StmtStmt ::= Stmt StmtStmt
-| /* ε */ ;
+StmtEnd ::= VariableDecl
+| Stmt ;
+
+
 
 Stmt ::= StmtExpr SEMI
 | IfStmt
