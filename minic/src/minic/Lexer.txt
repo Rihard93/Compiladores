@@ -1,7 +1,6 @@
 package minic;
 //import static minic.Token.*;
 import java_cup.runtime.*;
-import static minic.Main.txtInfo;
 %%
 
 %class Lexer
@@ -34,31 +33,31 @@ BOOLEANAS = true | false;
 /* PALABRAS RESERVADAS */
 //{RESERVADAS} {analizar=yytext(); linea=yyline; columna=yycolumn; return Palabra_Reservada;}
 
-"void" { return symbol(sym.VOID); }
-"int" {return symbol(sym.INT); }
-"double" { return symbol(sym.DOUBLE); }
-"bool" { return symbol(sym.BOOL); }
-"string" { return symbol(sym.STRING); }
-"class" { return symbol(sym.CLASS); }
-"interface" { return symbol(sym.INTERFACE); }
-"null" { return symbol(sym.NULL); }
-"this" { return symbol(sym.THIS); }
-"extends" { return symbol(sym.EXTENDS); }
-"implements" { return symbol(sym.IMPLEMENTS); }
-"for" { return symbol(sym.FOR); }
-"while" { return symbol(sym.WHILE); }
-"if" { return symbol(sym.IF); }
-"else" { return symbol(sym.ELSE); }
-"return" { return symbol(sym.RETURN); }
-"break" { return symbol(sym.BREAK); }
-"New" { return symbol(sym.NEW); }
-"NewArray" { return symbol(sym.NEWARRAY); }
-"Print" { return symbol(sym.PRINT); }
-"ReadInteger" { return symbol(sym.READINTEGER); }
-"ReadLine" { return symbol(sym.READLINE); }
-"Malloc" { return symbol(sym.MALLOC); }
-"GetByte" { return symbol(sym.GETBYTE); }
-"SetByte" { return symbol(sym.SETBYTE); }
+"void" { return symbol(sym.VOID, yytext()); }
+"int" {return symbol(sym.INT, yytext()); }
+"double" { return symbol(sym.DOUBLE, yytext()); }
+"bool" { return symbol(sym.BOOL, yytext()); }
+"string" { return symbol(sym.STRING, yytext()); }
+"class" { return symbol(sym.CLASS, yytext()); }
+"interface" { return symbol(sym.INTERFACE, yytext()); }
+"null" { return symbol(sym.NULL, yytext()); }
+"this" { return symbol(sym.THIS, yytext()); }
+"extends" { return symbol(sym.EXTENDS, yytext()); }
+"implements" { return symbol(sym.IMPLEMENTS, yytext()); }
+"for" { return symbol(sym.FOR, yytext()); }
+"while" { return symbol(sym.WHILE, yytext()); }
+"if" { return symbol(sym.IF, yytext()); }
+"else" { return symbol(sym.ELSE, yytext()); }
+"return" { return symbol(sym.RETURN, yytext()); }
+"break" { return symbol(sym.BREAK, yytext()); }
+"New" { return symbol(sym.NEW, yytext()); }
+"NewArray" { return symbol(sym.NEWARRAY, yytext()); }
+"Print" { return symbol(sym.PRINT, yytext()); }
+"ReadInteger" { return symbol(sym.READINTEGER, yytext()); }
+"ReadLine" { return symbol(sym.READLINE, yytext()); }
+"Malloc" { return symbol(sym.MALLOC, yytext()); }
+"GetByte" { return symbol(sym.GETBYTE, yytext()); }
+"SetByte" { return symbol(sym.SETBYTE, yytext()); }
 
 /* IDENTIFICADORES */
 //[a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;}
@@ -74,33 +73,33 @@ BOOLEANAS = true | false;
 /* OPERADORES Y CARACTERES */
 //{CARACTERES} {analizar=yytext(); linea=yyline; columna=yycolumn; return Caracter;}
 
-"+" {return symbol(sym.PLUS); }
-"-" {return symbol(sym.MINUS); }
-"*" {return symbol(sym.TIMES); }
-"/" {return symbol(sym.DIV); }
-"%" {return symbol(sym.MOD); }
-"<" {return symbol(sym.LESS); }
-"<=" {return symbol(sym.LESSEQ); }
-">" {return symbol(sym.GREATER); }
-">=" {return symbol(sym.GREATEREQ); }
-"=" {return symbol(sym.EQUALS); }
-"==" {return symbol(sym.EQTO); }
-"!=" {return symbol(sym.NOTEQ); }
-"&&" {return symbol(sym.AMPERSONS); }
-"||" {return symbol(sym.OR); }
-"!" {return symbol(sym.EXCLAM); }
-";" {return symbol(sym.SEMI); }
-"," {return symbol(sym.COMMA); }
-"." {return symbol(sym.PERIOD); }
-"[" {return symbol(sym.LCOR); }
-"]" {return symbol(sym.RCOR); }
-"(" {return symbol(sym.LPAR); }
-")" {return symbol(sym.RPAR); }
-"{" {return symbol(sym.LLLAV); }
-"}" {return symbol(sym.RLLAV); }
-"[]" {return symbol(sym.CORS); }
-"()" {return symbol(sym.PARS); }
-"{}" {return symbol(sym.LLAVS); }
+"+" {return symbol(sym.PLUS, yytext()); }
+"-" {return symbol(sym.MINUS, yytext()); }
+"*" {return symbol(sym.TIMES, yytext()); }
+"/" {return symbol(sym.DIV, yytext()); }
+"%" {return symbol(sym.MOD, yytext()); }
+"<" {return symbol(sym.LESS, yytext()); }
+"<=" {return symbol(sym.LESSEQ, yytext()); }
+">" {return symbol(sym.GREATER, yytext()); }
+">=" {return symbol(sym.GREATEREQ, yytext()); }
+"=" {return symbol(sym.EQUALS, yytext()); }
+"==" {return symbol(sym.EQTO, yytext()); }
+"!=" {return symbol(sym.NOTEQ, yytext()); }
+"&&" {return symbol(sym.AMPERSONS, yytext()); }
+"||" {return symbol(sym.OR, yytext()); }
+"!" {return symbol(sym.EXCLAM, yytext()); }
+";" {return symbol(sym.SEMI, yytext()); }
+"," {return symbol(sym.COMMA, yytext()); }
+"." {return symbol(sym.PERIOD, yytext()); }
+"[" {return symbol(sym.LCOR, yytext()); }
+"]" {return symbol(sym.RCOR, yytext()); }
+"(" {return symbol(sym.LPAR, yytext()); }
+")" {return symbol(sym.RPAR, yytext()); }
+"{" {return symbol(sym.LLLAV, yytext()); }
+"}" {return symbol(sym.RLLAV, yytext()); }
+"[]" {return symbol(sym.CORS, yytext()); }
+//"()" {return symbol(sym.PARS, yytext()); }
+"{}" {return symbol(sym.LLAVS, yytext()); }
 
 /* STRINGS */
 // \" [^\r\n]+  \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
