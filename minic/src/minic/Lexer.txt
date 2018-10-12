@@ -100,7 +100,7 @@ BOOLEANAS = true | false;
 "}" {return symbol(sym.RLLAV, yytext()); }
 "[]" {return symbol(sym.CORS, yytext()); }
 //"()" {return symbol(sym.PARS, yytext()); }
-"{}" {return symbol(sym.LLAVS, yytext()); }
+//"{}" {return symbol(sym.LLAVS, yytext()); }
 
 /* STRINGS */
 // \" [^\r\n]+  \" {analizar=yytext(); linea=yyline; columna=yycolumn; return String;}
