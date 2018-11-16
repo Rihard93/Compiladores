@@ -71,13 +71,13 @@ Decl ::= VariableDecl
 
 VariableDecl ::= Variable SEMI ;
 
-Variable ::= Type IDENT ;
+Variable ::= Type:t IDENT:I {: if (!Env.put(I,t))  System.out.println("  La variable " + I + " ya ha sido declarada en el ambito actual"); :} ;
 
-Type ::= INT
-| DOUBLE
-| BOOL
-| STRING
-| IDENT
+Type ::= INT {: RESULT = "int"; :}
+| DOUBLE {: RESULT = "double"; :}
+| BOOL {: RESULT = "bool"; :}
+| STRING {: RESULT = "string"; :}
+| IDENT 
 | Type CORS ;
 
 FunctionDecl ::= Type FuncCont
@@ -91,7 +91,7 @@ Formals ::= FormalsCont Variable
 FormalsCont ::= FormalsCont Variable COMMA
 | /* ε */ ;
 
-ClassDecl ::= CLASS IDENT Ext Imp LLLAV ClassField RLLAV ;
+ClassDecl ::= CLASS IDENT:n1 {: if(Env.putClass(n1.toString(),null,null) != 0) System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual"); :} Ext Imp LLLAV ClassField RLLAV {: System.out.println("Saliendo de la clase " + n1); Env.pop(); :} ;
 
 Ext ::= EXTENDS IDENT
 | /* ε */ ;
