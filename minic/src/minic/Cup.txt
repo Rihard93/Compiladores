@@ -4,7 +4,7 @@ import java.io.FileReader;
 
 /* Codigo de nuestro parser */
 parser code {:
-    
+  
     /* Reporte de error encontrado. */
     public void report_error(String message, Object info) {
         StringBuilder m = new StringBuilder("Error ");
@@ -49,7 +49,7 @@ terminal VOID, INT, DOUBLE, BOOL, STRING, CLASS, INTERFACE, NULL, THIS, EXTENDS,
 terminal Object intConstant, doubleConstant, boolConstant, stringConstant, hexConstant;
 
 /*--------------NO TERMINALES-----------*/
-non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont;
+non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr,Expr1, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont;
 
 /*--------------PRECEDENCIAS-----------*/
 precedence left EQUALS;
@@ -77,7 +77,7 @@ Type ::= INT {: RESULT = "int"; :}
 | DOUBLE {: RESULT = "double"; :}
 | BOOL {: RESULT = "bool"; :}
 | STRING {: RESULT = "string"; :}
-| IDENT 
+| IDENT:n1 {: RESULT = n1.toString(); :}
 | Type CORS ;
 
 FunctionDecl ::= Type FuncCont
@@ -91,9 +91,36 @@ Formals ::= FormalsCont Variable
 FormalsCont ::= FormalsCont Variable COMMA
 | /* ε */ ;
 
-ClassDecl ::= CLASS IDENT:n1 {: if(Env.putClass(n1.toString(),null,null) != 0) System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual"); :} Ext Imp LLLAV ClassField RLLAV {: System.out.println("Saliendo de la clase " + n1); Env.pop(); :} ;
+ClassDecl ::= CLASS IDENT:n1 Ext:n2   
+{:
+    if(n2 == null)
+    {
+        if(Env.putClass(n1.toString(),null,"class") != 0)
+        {
+            System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual");
+        }
+    }
+    else
+    {
+        switch(Env.putClass(n1.toString(),n2.toString(),"class"))
+        {
+            case 1:
+            System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual");
+            break;
 
-Ext ::= EXTENDS IDENT
+            case 2:
+            System.out.println("  La clase " + n2 + " no existe en el ambito actual");
+            break;                
+        } 
+    }
+:} 
+Imp LLLAV ClassField RLLAV 
+{:
+     System.out.print("Saliendo de la clase: "+n1);
+      Env.pop();
+ :} ;
+
+Ext ::= EXTENDS IDENT:n1 {: RESULT = n1; :}
 | /* ε */ ;
 
 Imp ::= IMPLEMENTS ImpID
@@ -108,7 +135,7 @@ ClassField ::= ClassField Field
 Field ::= VariableDecl
 | FunctionDecl ;
 
-InterfaceDecl ::= INTERFACE IDENT LLLAV InterfaceProt RLLAV ;
+InterfaceDecl ::= INTERFACE IDENT:n1 {: if(Env.putClass(n1.toString(),null,null) != 0) System.out.println("  La interfaz " + n1 + " ya ha sido declarada en el ambito actual"); :} LLLAV InterfaceProt RLLAV ;
 
 InterfaceProt ::= InterfaceProt Prototype
 | /* ε */ ;
@@ -125,8 +152,6 @@ StmtCont ::= StmtEnd StmtCont
 
 StmtEnd ::= VariableDecl
 | Stmt ;
-
-
 
 Stmt ::= StmtExpr SEMI
 | IfStmt
@@ -158,16 +183,16 @@ PrintStmt ::= PRINT LPAR ExprPrint RPAR SEMI ;
 ExprPrint ::= ExprPrint COMMA Expr
 | Expr ;
 
-Expr ::= LValue EQUALS Expr
-| Constant
+Expr ::= LValue EQUALS Expr:e {: RESULT = Env.Resolve(e.toString()); :} 
+| Constant:e {: RESULT = e; :}
 | LValue
 | THIS
 | Call 
-| LPAR Expr RPAR 
-| Expr PLUS Expr
-| Expr MINUS Expr
-| Expr TIMES Expr
-| Expr DIV Expr
+| LPAR Expr RPAR
+|Expr1:e1 PLUS Expr:e2 {: RESULT = e1 + "+" + e2; :}
+|Expr1:e1 MINUS Expr:e2 {: RESULT = e1 + "-" + e2; :}
+|Expr1:e1 TIMES Expr:e2 {: RESULT = e1 + "*" + e2; :}
+| Expr1:e1 DIV Expr:e2 {: RESULT = e1 + "/" + e2; :}
 | Expr MOD Expr
 | MINUS Expr
 | Expr LESS Expr
@@ -185,6 +210,9 @@ Expr ::= LValue EQUALS Expr
 | READLINE LPAR RPAR
 | MALLOC LPAR Expr RPAR ;
 
+Expr1 ::= Constant:e {: RESULT = e; :}
+| IDENT ;
+
 LValue ::= IDENT
 | Expr PERIOD IDENT
 | Expr LCOR Expr RCOR ;
@@ -201,8 +229,8 @@ LibCall ::= GETBYTE LPAR Expr RPAR
 Actuals ::= ExprPrint
 | /* ε */ ;
 
-Constant ::= intConstant
-| doubleConstant
+Constant ::= intConstant:e {: RESULT = e; :}
+| doubleConstant:e {: RESULT = e; :}
 | boolConstant
 | stringConstant
 | NULL ;

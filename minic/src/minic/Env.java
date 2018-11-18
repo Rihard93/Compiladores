@@ -6,13 +6,14 @@
 package minic;
 
 import java.util.*;
-import minic.Info;
+
 
 public class Env
 {
     static Env root = new Env(null);
     static Env top = root;
     HashMap table;
+    String Operacion;
     Env prev;
     
     public Env (Env p)
@@ -21,7 +22,7 @@ public class Env
         prev = p;
     }
     
-    public static int putClass(String c, String sc, sym s)
+    public static int putClass(String c, String sc, String s)
     {
         if(root.table.containsKey(c))
         {
@@ -39,7 +40,9 @@ public class Env
         }
         if (!root.table.containsKey(sc))
         {
+            root.table.put(c, s);
             System.out.println("Entrando a la Clase: " + c);
+            top.table.put(c, s);
             push();
             return 2;
         }
@@ -81,13 +84,13 @@ public class Env
     public static void push()
     {
         top = new Env(top);
-        System.out.println(" -> Current Enviroment: "+top);
+        System.out.println(" -> Ambito Actual: "+top);
     }
     
     public static void pop()
     {
         top = top.prev;
-        System.out.println(" -> Current Enviroment: "+top);
+        System.out.println(" -> Ambito Actual: "+top);
     }
     
 
@@ -101,6 +104,14 @@ public class Env
         {
             return ""+table;
         }
+    }
+    
+    public static String Resolve(String S)
+    {
+        Posfijo Stage1 = new Posfijo(S);
+        String Posfijo = Stage1.getPostFix();    
+        Solver Stage2 = new Solver(Posfijo);
+        return Stage2.getResult();
     }
 
 }
