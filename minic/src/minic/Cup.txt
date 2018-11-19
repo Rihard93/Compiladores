@@ -114,7 +114,16 @@ ClassDecl ::= CLASS IDENT:n1 Ext:n2
         } 
     }
 :} 
-Imp LLLAV ClassField RLLAV 
+Imp:n3
+{:
+    boolean R = Env.getInterfaces(n3.toString());
+
+    if(R == false)
+    {
+        System.out.println("  La interfaz " + n3 + " no existe en el ambito actual");
+    }
+ :}
+ LLLAV ClassField RLLAV 
 {:
      System.out.print("Saliendo de la clase: "+n1);
       Env.pop();
@@ -127,7 +136,7 @@ Imp ::= IMPLEMENTS ImpID
 | /* ε */ ;
 
 ImpID ::= ImpID COMMA IDENT
-| IDENT ;
+| IDENT:e {: RESULT = e :} ;
 
 ClassField ::= ClassField Field
 | /* ε */ ;

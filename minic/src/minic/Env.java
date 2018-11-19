@@ -56,6 +56,18 @@ public class Env
         }
     }
     
+    public static boolean getInterfaces(String I)
+    {
+        if(!root.table.containsKey(I))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    
     public static boolean put(Object name, Object tipo)
     {
         if(!top.table.containsKey(name))
