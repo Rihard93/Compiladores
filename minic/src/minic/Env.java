@@ -130,9 +130,26 @@ public class Env
         }
         else
         {
-            aux.value = Valor;
-            top.table.replace(Lvalue, aux);
-            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+                boolean Variable = isNumeric(Valor);
+                if (Variable == true)
+                {
+                    aux.value = Valor;
+                    top.table.replace(Lvalue, aux);            
+                    System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+                }
+                else
+                {
+                    String tipoLval = aux.type;
+                    if(top.table.containsKey(Valor))
+                    {
+                        //Verificar tipos
+                        //Obtener valor y realizar asignacion
+                    }
+                    else
+                    {
+                        System.out.println("  Error: No se puede asignar un valor nulo a la variable " + Lvalue + " -> Ambito Actual: "+top);
+                    }
+                }
         }
     }
     
