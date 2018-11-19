@@ -106,6 +106,44 @@ public class Env
         }
     }
     
+    public static void Validar(String Lvalue, String Valor)
+    {        
+        Info aux = (Info) (top.table.get(Lvalue));
+        if(Valor.contains("+") || Valor.contains("-") || Valor.contains("*") || Valor.contains("/"))
+        {
+            String Resultado = Resolve(Valor);
+            aux.value = Resultado;
+            top.table.replace(Lvalue, aux);
+            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
+        }
+        else
+        {
+            aux.value = Valor;
+            top.table.replace(Lvalue, aux);
+            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+        }
+    }
+    
+    public static boolean isNumeric(String S)
+    {
+        try
+        {
+            double d = Double.parseDouble(S);
+        }
+        catch(NumberFormatException nfe)
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    public static String ReturnVal(String S)
+    {
+        Info aux = (Info) (top.table.get(S));       
+        return aux.value.toString();
+    }
+    
+
     public static String Resolve(String S)
     {
         Posfijo Stage1 = new Posfijo(S);

@@ -183,9 +183,12 @@ PrintStmt ::= PRINT LPAR ExprPrint RPAR SEMI ;
 ExprPrint ::= ExprPrint COMMA Expr
 | Expr ;
 
-Expr ::= LValue EQUALS Expr:e {: RESULT = Env.Resolve(e.toString()); :} 
+Expr ::= LValue:v EQUALS Expr:e 
+{: 
+    Env.Validar(v.toString(), e.toString());
+ :} 
 | Constant:e {: RESULT = e; :}
-| LValue
+| LValue:e {: RESULT = e; :}
 | THIS
 | Call 
 | LPAR Expr RPAR
@@ -211,9 +214,9 @@ Expr ::= LValue EQUALS Expr:e {: RESULT = Env.Resolve(e.toString()); :}
 | MALLOC LPAR Expr RPAR ;
 
 Expr1 ::= Constant:e {: RESULT = e; :}
-| IDENT ;
+| IDENT:e {: RESULT = e; :} ;
 
-LValue ::= IDENT
+LValue ::= IDENT:e {: RESULT = e; :}
 | Expr PERIOD IDENT
 | Expr LCOR Expr RCOR ;
 
@@ -232,5 +235,5 @@ Actuals ::= ExprPrint
 Constant ::= intConstant:e {: RESULT = e; :}
 | doubleConstant:e {: RESULT = e; :}
 | boolConstant
-| stringConstant
+| stringConstant:e {: RESULT = e; :}
 | NULL ;
