@@ -26,14 +26,14 @@ public class Env
     {
         if(root.table.containsKey(c))
         {
-            System.out.println("Entrando a la Clase: " + c);
+            System.out.println("  Entrando a la Clase: " + c);
             push();
             return 1;
         }
         if(sc == null)
         {
             root.table.put(c, s);
-            System.out.println("Entrando a la Clase: " + c);
+            System.out.println("  Entrando a la Clase: " + c);
             top.table.put(c, s);
             push();
             return 0;
@@ -41,7 +41,7 @@ public class Env
         if (!root.table.containsKey(sc))
         {
             root.table.put(c, s);
-            System.out.println("Entrando a la Clase: " + c);
+            System.out.println("  Entrando a la Clase: " + c);
             top.table.put(c, s);
             push();
             return 2;
@@ -49,7 +49,7 @@ public class Env
         else
         {
             root.table.put(c, s);
-            System.out.println("Entrando a la Clase: " + c);
+            System.out.println("  Entrando a la Clase: " + c);
             top.table.put(c, s);
             push();
             return 0;
@@ -124,18 +124,72 @@ public class Env
         if(Valor.contains("+") || Valor.contains("-") || Valor.contains("*") || Valor.contains("/"))
         {
             String Resultado = Resolve(Valor);
-            aux.value = Resultado;
-            top.table.replace(Lvalue, aux);
-            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
+            
+            if(Resultado.equals("-1"))
+            {
+                System.out.println("  Error: No se puede realizar la operacion de asignacion para el valor de  " + Lvalue + " -> Ambito Actual: "+top);
+            }
+            else
+            {               
+                if(aux.type == "string" )
+                {                    
+                   System.out.println("  Error: No se puede asignar un valor numerico a un string " + Lvalue + " -> Ambito Actual: "+top);
+                 }
+                else
+                {                     
+                     String tipo;
+                    if(RevFloat(Resultado))
+                    {                        
+                        tipo = "integer";
+                    }
+                    else
+                    {
+                         tipo = "double";
+                     }
+                    if(aux.type == tipo)
+                    {
+                        aux.value = Resultado;
+                        top.table.replace(Lvalue, aux);
+                        System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
+                    }
+                    else
+                    {
+                       System.out.println("  Error: No se puede asignar un valor a la variable " +Lvalue + " -> " + aux.type + " & " + tipo + " no son compatibles" + " -> Ambito Actual: "+top);   
+                    }
+                }
+            }
         }
         else
         {
                 boolean Variable = isNumeric(Valor);
+                String tipo;
                 if (Variable == true)
                 {
-                    aux.value = Valor;
-                    top.table.replace(Lvalue, aux);            
-                    System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+                    if(aux.type == "string" )
+                    {
+                        System.out.println("  Error: No se puede asignar un valor numerico a un string " + Lvalue + " -> Ambito Actual: "+top);
+                    }
+                    else
+                    {
+                        if(RevFloat(Valor))
+                        {
+                            tipo = "integer";
+                        }
+                        else
+                        {
+                            tipo = "double";
+                        }
+                        if(aux.type == tipo)
+                        {
+                            aux.value = Valor;
+                            top.table.replace(Lvalue, aux);            
+                            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+                        }
+                        else
+                        {
+                           System.out.println("  Error: No se puede asignar un valor a la variable " +Lvalue + " -> " + aux.type + " & " + tipo + " no son compatibles" + " -> Ambito Actual: "+top);  
+                        }
+                    }
                 }
                 else
                 {
@@ -143,11 +197,46 @@ public class Env
                     if(top.table.containsKey(Valor))
                     {
                         //Verificar tipos
-                        //Obtener valor y realizar asignacion
+                         Info tmp = (Info) (top.table.get(Valor));
+                         if(tipoLval == tmp.type)
+                         {
+                             if(tmp.value == null)
+                             {
+                                 System.out.println("  Error: No se puede asignar un valor nulo a la variable " + Lvalue + " -> Ambito Actual: "+top);
+                             }
+                             else
+                             {
+                                aux.value = tmp.value;
+                                top.table.replace(Lvalue, aux.value);
+                                System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+aux.value + " -> Ambito Actual: "+top);
+                             }
+                         }
+                         else
+                         {
+                             System.out.println("  Error: No se puede asignar un valor a la variable " +Lvalue + " -> " + tipoLval + " & " + tmp.type + " no son compatibles" + " -> Ambito Actual: "+top);
+                         }
+                        
                     }
                     else
                     {
-                        System.out.println("  Error: No se puede asignar un valor nulo a la variable " + Lvalue + " -> Ambito Actual: "+top);
+                        if(Valor.contains("\""))
+                        {
+                            if(aux.type == "string")
+                            {
+                                 aux.value = Valor;
+                                 top.table.replace(Lvalue, aux);            
+                                 System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
+                                
+                            }
+                            else
+                            {
+                                System.out.println("  Error: No se puede asignar un valor String a la variable " + Lvalue + " -> Ambito Actual: "+top);
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("  Error: No se puede asignar el valor de una variable no existente a la variable " + Lvalue + " -> Ambito Actual: "+top);
+                        }
                     }
                 }
         }
@@ -180,5 +269,19 @@ public class Env
         Solver Stage2 = new Solver(Posfijo);
         return Stage2.getResult();
     }
+    
+   private static boolean RevFloat(String Result)
+  {
+      float N = Float.parseFloat(Result);
+      
+      if(N % 1 == 0)
+      {
+         return true;
+      }
+      else
+      {
+          return false;
+      }
+  }   
 
 }

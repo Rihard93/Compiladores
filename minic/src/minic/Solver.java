@@ -54,7 +54,7 @@ public static String Operar(String Op)
 
   private static float evaluar(String op, String n2, String n1) {
     
-    float num1,num2; 
+    float num1 = 0,num2 = 0; 
     boolean NullN1 = false,NullN2 = false;
     boolean NumN1 = Env.isNumeric(n1);
     boolean NumN2 = Env.isNumeric(n2);
@@ -73,7 +73,16 @@ public static String Operar(String Op)
         }
         else
         {
-            num1 = Float.parseFloat(Env.ReturnVal(n1));
+            String rev = String.valueOf(Env.ReturnVal(n1));
+            boolean chk2 = Env.isNumeric(rev);
+            if(chk2 == false)
+            {
+                Stop = true;
+            }
+            else
+            {
+                num1 = Float.parseFloat(Env.ReturnVal(n1));
+            }
         }
     }
     
@@ -90,11 +99,20 @@ public static String Operar(String Op)
         }
         else
         {
-            num2 = Float.parseFloat(Env.ReturnVal(n2));
+            String rev = String.valueOf(Env.ReturnVal(n2));
+            boolean chk2 = Env.isNumeric(rev);
+            if(chk2 == false)
+            {
+                Stop = true;
+            }
+            else
+            {
+                num2 = Float.parseFloat(Env.ReturnVal(n2));
+            }
         }
     }
       
-    if (NullN1 == true || NullN2 == true)
+    if (NullN1 == true || NullN2 == true || Stop == true)
     {
         Stop = true;
         return -1;

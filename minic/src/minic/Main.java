@@ -135,9 +135,6 @@ public class Main extends javax.swing.JFrame {
         Sintaxis.main(ArchivoPrueba);        
     }
     
-  
-
-    
     
    /** METODOS DESHABILITADOS
     public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;

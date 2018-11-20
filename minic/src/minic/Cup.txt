@@ -116,27 +116,35 @@ ClassDecl ::= CLASS IDENT:n1 Ext:n2
 :} 
 Imp:n3
 {:
-    boolean R = Env.getInterfaces(n3.toString());
 
-    if(R == false)
+    if(n3 == null)
     {
-        System.out.println("  La interfaz " + n3 + " no existe en el ambito actual");
+        
+    }
+    else
+    {   
+        boolean R = Env.getInterfaces(n3.toString());
+
+        if(R == false)
+        {
+            System.out.println("  La interfaz " + n3 + " no existe en el ambito actual");
+        }
     }
  :}
  LLLAV ClassField RLLAV 
 {:
-     System.out.print("Saliendo de la clase: "+n1);
+      System.out.print("  Saliendo de la clase: "+n1);
       Env.pop();
  :} ;
 
 Ext ::= EXTENDS IDENT:n1 {: RESULT = n1; :}
 | /* ε */ ;
 
-Imp ::= IMPLEMENTS ImpID
+Imp ::= IMPLEMENTS ImpID:e {: RESULT = e; :}
 | /* ε */ ;
 
-ImpID ::= ImpID COMMA IDENT
-| IDENT:e {: RESULT = e :} ;
+ImpID ::= ImpID COMMA IDENT:e {: RESULT = e; :}
+| IDENT:e {: RESULT = e; :} ;
 
 ClassField ::= ClassField Field
 | /* ε */ ;
@@ -195,15 +203,15 @@ ExprPrint ::= ExprPrint COMMA Expr
 Expr ::= LValue:v EQUALS Expr:e 
 {: 
     Env.Validar(v.toString(), e.toString());
- :} 
+:} 
 | Constant:e {: RESULT = e; :}
 | LValue:e {: RESULT = e; :}
 | THIS
 | Call 
 | LPAR Expr RPAR
-|Expr1:e1 PLUS Expr:e2 {: RESULT = e1 + "+" + e2; :}
-|Expr1:e1 MINUS Expr:e2 {: RESULT = e1 + "-" + e2; :}
-|Expr1:e1 TIMES Expr:e2 {: RESULT = e1 + "*" + e2; :}
+| Expr1:e1 PLUS Expr:e2 {: RESULT = e1 + "+" + e2; :}
+| Expr1:e1 MINUS Expr:e2 {: RESULT = e1 + "-" + e2; :}
+| Expr1:e1 TIMES Expr:e2 {: RESULT = e1 + "*" + e2; :}
 | Expr1:e1 DIV Expr:e2 {: RESULT = e1 + "/" + e2; :}
 | Expr MOD Expr
 | MINUS Expr
