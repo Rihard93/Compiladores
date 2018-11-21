@@ -45,11 +45,11 @@ parser code {:
 /* ------------Declaracion de simbolos terminales y no terminales---------- *
 
 /*--------------TERMINALES-----------*/
-terminal VOID, INT, DOUBLE, BOOL, STRING, CLASS, INTERFACE, NULL, THIS, EXTENDS, IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY, PRINT, READINTEGER, READLINE, MALLOC, IDENT, GETBYTE, SETBYTE, PLUS, MINUS, TIMES, DIV, MOD, LESS, LESSEQ, GREATER, GREATEREQ, EQUALS, EQTO, NOTEQ, AMPERSONS, OR, EXCLAM, SEMI, COMMA, PERIOD, LCOR, RCOR, LPAR, RPAR, LLLAV, RLLAV, CORS, PARS, LLAVS;
+terminal VOID, INT, DOUBLE, BOOL, STRING, CLASS, INTERFACE, NULL, THIS, EXTENDS, IMPLEMENTS, FOR, WHILE, IF, ELSE, RETURN, BREAK, NEW, NEWARRAY, PRINT, READINTEGER, READLINE, MALLOC, IDENT, GETBYTE, SETBYTE, PLUS, MINUS, TIMES, DIV, MOD, LESS, LESSEQ, GREATER, GREATEREQ, EQUALS, EQTO, NOTEQ, AMPERSONS, OR, EXCLAM, SEMI, COMMA, PERIOD, LCOR, RCOR, LPAR, RPAR, LLLAV, RLLAV, CORS, PARS, LLAVS, CONSTANT;
 terminal Object intConstant, doubleConstant, boolConstant, stringConstant, hexConstant;
 
 /*--------------NO TERMINALES-----------*/
-non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr,Expr1, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont;
+non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr,Expr1, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont, VarConstant;
 
 /*--------------PRECEDENCIAS-----------*/
 precedence left EQUALS;
@@ -57,6 +57,7 @@ precedence left PLUS, MINUS, TIMES, DIV, MOD;
 precedence left LESS, LESSEQ, GREATER, GREATEREQ, EQTO, NOTEQ, AMPERSONS, OR, EXCLAM ;
 precedence left ELSE;
 precedence left IDENT;
+precedence left DOUBLE,BOOL,STRING,INT;
 /* -------------------GRAMATICA FORMAL------------------------ */
 
 Program ::= Program Decl
@@ -71,7 +72,10 @@ Decl ::= VariableDecl
 
 VariableDecl ::= Variable SEMI ;
 
-Variable ::= Type:t IDENT:I {: if (!Env.put(I,t))  System.out.println("  La variable " + I + " ya ha sido declarada en el ambito actual"); :} ;
+Variable ::= VarConstant Type:t IDENT:I {: if (!Env.put(I,t))  System.out.println("  La variable " + I + " ya ha sido declarada en el ambito actual"); :} ;
+
+VarConstant ::= CONSTANT
+| /* ε */ ;
 
 Type ::= INT {: RESULT = "int"; :}
 | DOUBLE {: RESULT = "double"; :}
