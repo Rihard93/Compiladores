@@ -167,50 +167,58 @@ public class Env
         {
             Valor = Valor.replaceAll("&int", "");
             Valor = Valor.replaceAll("&dob", "");
+            Valor = Valor.replaceAll("&str", "");
             Info aux = (Info) (top.table.get(Lvalue));
             if(Valor.contains("+") || Valor.contains("-") || Valor.contains("*") || Valor.contains("/"))
             {
-                String Resultado = Resolve(Valor);
-
-                if(Resultado.equals("-1"))
+                if(Valor.contains("\""))
                 {
-                    System.out.println("  Error: No se puede realizar la operacion de asignacion para el valor de  " + Lvalue + " -> Ambito Actual: "+top);
+                  System.out.println("  Error: No se puede realizar la operacion de asignacion para el valor de  " + Lvalue + "-> No se puede operar numeros con cadenas" +" -> Ambito Actual: "+top);   
                 }
                 else
-                {               
-                    if(aux.type == "string" )
-                    {                    
-                       System.out.println("  Error: No se puede asignar un valor numerico a un string " + Lvalue + " -> Ambito Actual: "+top);
-                     }
+                {
+                    String Resultado = Resolve(Valor);
+
+                    if(Resultado.equals("-1"))
+                    {
+                        System.out.println("  Error: No se puede realizar la operacion de asignacion para el valor de  " + Lvalue + " -> Ambito Actual: "+top);
+                    }
                     else
-                    {                     
-                         String tipo;
-                        if(RevFloat(Resultado))
-                        {                        
-                            tipo = "integer";
-                        }
-                        else
-                        {
-                             tipo = "double";
+                    {               
+                        if(aux.type == "string" )
+                        {                    
+                           System.out.println("  Error: No se puede asignar un valor numerico a un string " + Lvalue + " -> Ambito Actual: "+top);
                          }
-                        if(aux.type == tipo)
-                        {
-                            aux.value = Resultado;
-                            top.table.replace(Lvalue, aux);
-                            System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
-                                    for (int i = 0; i < output.size(); i++) 
-                                    {
-                                            if (output.get(i).nombre.compareTo(Lvalue)==0)
-                                            {
-                                                Salida element = new Salida(Lvalue, aux);
-                                                output.set(i, element);
-                                                break;
-                                            }
-                                      }                            
-                        }
                         else
-                        {
-                           System.out.println("  Error: No se puede asignar un valor a la variable " +Lvalue + " -> " + aux.type + " & " + tipo + " no son compatibles" + " -> Ambito Actual: "+top);   
+                        {                     
+                             String tipo;
+                            if(RevFloat(Resultado))
+                            {                        
+                                tipo = "integer";
+                            }
+                            else
+                            {
+                                 tipo = "double";
+                             }
+                            if(aux.type == tipo)
+                            {
+                                aux.value = Resultado;
+                                top.table.replace(Lvalue, aux);
+                                System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
+                                        for (int i = 0; i < output.size(); i++) 
+                                        {
+                                                if (output.get(i).nombre.compareTo(Lvalue)==0)
+                                                {
+                                                    Salida element = new Salida(Lvalue, aux);
+                                                    output.set(i, element);
+                                                    break;
+                                                }
+                                          }                            
+                            }
+                            else
+                            {
+                               System.out.println("  Error: No se puede asignar un valor a la variable " +Lvalue + " -> " + aux.type + " & " + tipo + " no son compatibles" + " -> Ambito Actual: "+top);   
+                            }
                         }
                     }
                 }
