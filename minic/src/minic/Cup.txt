@@ -49,7 +49,7 @@ terminal VOID, INT, DOUBLE, BOOL, STRING, CLASS, INTERFACE, NULL, THIS, EXTENDS,
 terminal Object intConstant, doubleConstant, boolConstant, stringConstant, hexConstant;
 
 /*--------------NO TERMINALES-----------*/
-non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr,Expr1, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont, VarConstant;
+non terminal  Program, Decl, VariableDecl, Variable, Type, FunctionDecl, Formals, ClassDecl, Field, InterfaceDecl, Prototype, StmtBlock, Stmt, IfStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr,Expr1, LValue, Call, LibCall, Actuals, Constant, Ext, Imp, ImpID, ProtCont, FuncCont, StmtExpr, ExprPrint, ElseIfStmt, ClassField, InterfaceProt, CallCont,FormalsCont, StmtEnd, StmtCont;
 
 /*--------------PRECEDENCIAS-----------*/
 precedence left EQUALS;
@@ -57,7 +57,7 @@ precedence left PLUS, MINUS, TIMES, DIV, MOD;
 precedence left LESS, LESSEQ, GREATER, GREATEREQ, EQTO, NOTEQ, AMPERSONS, OR, EXCLAM ;
 precedence left ELSE;
 precedence left IDENT;
-precedence left DOUBLE,BOOL,STRING,INT;
+precedence left DOUBLE,BOOL,STRING,INT,VOID;
 /* -------------------GRAMATICA FORMAL------------------------ */
 
 Program ::= Program Decl
@@ -70,43 +70,41 @@ Decl ::= VariableDecl
 | error SEMI
 | error RLLAV ;
 
-VariableDecl ::= Variable SEMI ;
+VariableDecl ::=  Variable SEMI 
+| CONSTANT Variable SEMI ;
 
-Variable ::= VarConstant Type:t IDENT:I {: if (!Env.put(I,t))  System.out.println("  La variable " + I + " ya ha sido declarada en el ambito actual"); :} ;
-
-VarConstant ::= CONSTANT
-| /* ε */ ;
+Variable ::=   Type:t IDENT:I {: RESULT = ""; RESULT=RESULT.toString().concat("["+I+","+t+"]");if (!Env.put(I,"v",t))  System.out.println("  La variable " + I + " ya ha sido declarada en el ambito actual"); :} ;
 
 Type ::= INT {: RESULT = "int"; :}
 | DOUBLE {: RESULT = "double"; :}
 | BOOL {: RESULT = "bool"; :}
 | STRING {: RESULT = "string"; :}
 | IDENT:n1 {: RESULT = n1.toString(); :}
+| VOID
 | Type CORS ;
 
-FunctionDecl ::= Type FuncCont
-| VOID FuncCont ;
+FunctionDecl ::= FuncCont:n;
 
-FuncCont ::= IDENT LPAR Formals RPAR StmtBlock ;
+FuncCont ::= Type:t IDENT:n {: if(!Env.put(n.toString(),"m",t)) {System.out.println("Nombre de metodo ya existe");} else {System.out.print(" METHOD ENTRY: "+n); Env.push();}:} LPAR Formals:p {:Env.parametros(n.toString(),p);:} RPAR StmtBlock:v {:Env.mreturn(t.toString(),v);System.out.print(" BLOCK EXIT"); Env.pop();System.out.print(" METHOD EXIT" +n); Env.pop();:} ;
 
-Formals ::= FormalsCont Variable
+Formals ::= FormalsCont:a Variable:b {: if(a==null){a="";a = a.toString().concat(b.toString());}else{a = a.toString().concat(b.toString());} RESULT = a; :}
 | /* ε */ ;
 
-FormalsCont ::= FormalsCont Variable COMMA
+FormalsCont ::= FormalsCont:a Variable:b COMMA {:if(a==null){a="";}; a = a.toString().concat(b+"-"); RESULT = a;:}
 | /* ε */ ;
 
 ClassDecl ::= CLASS IDENT:n1 Ext:n2   
 {:
     if(n2 == null)
     {
-        if(Env.putClass(n1.toString(),null,"class") != 0)
+        if(Env.putClass(n1.toString(),null,null) != 0)
         {
             System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual");
         }
     }
     else
     {
-        switch(Env.putClass(n1.toString(),n2.toString(),"class"))
+        switch(Env.putClass(n1.toString(),n2.toString(),null))
         {
             case 1:
             System.out.println("  La clase " + n1 + " ya ha sido declarada en el ambito actual");
@@ -131,7 +129,7 @@ Imp ::= IMPLEMENTS ImpID:e
 | /* ε */ ;
 
 ImpID ::= ImpID COMMA IDENT
-| IDENT:e
+| IDENT:n3
 {:
 
     if(n3 == null)
@@ -165,24 +163,24 @@ Prototype ::= Type ProtCont
 
 ProtCont ::= IDENT LPAR Formals RPAR SEMI ;
 
-StmtBlock ::= LLLAV StmtCont RLLAV ;
+StmtBlock ::= LLLAV {:System.out.print(" BLOCK ENTRY"); Env.push(); :} StmtCont:p {:RESULT=p;:} RLLAV ;
 
-StmtCont ::= StmtEnd StmtCont
+StmtCont ::= StmtEnd:p StmtCont:q{:if(p!=null){if(q==null){q="";q = q.toString().concat(p.toString());}else {q = q.toString().concat(p.toString());}}; RESULT = q; :}
 | /* ε */ ;
 
 StmtEnd ::= VariableDecl
-| Stmt ;
+| Stmt:p {:RESULT = p;:} ;
 
-Stmt ::= StmtExpr SEMI
+Stmt ::= StmtExpr:m{:RESULT=m;:} SEMI
 | IfStmt
 | WhileStmt
 | ForStmt
 | BreakStmt
-| ReturnStmt
+| ReturnStmt:p {:RESULT = p;:}
 | PrintStmt
 | StmtBlock ;
 
-StmtExpr ::= Expr
+StmtExpr ::= Expr:n {:RESULT=n;:}
 | /* ε */ ;
 
 IfStmt ::= IF LPAR Expr RPAR Stmt ElseIfStmt ;
@@ -194,14 +192,14 @@ WhileStmt ::= WHILE LPAR Expr RPAR Stmt ;
 
 ForStmt ::= FOR LPAR StmtExpr SEMI Expr SEMI StmtExpr RPAR Stmt ;
 
-ReturnStmt ::= RETURN StmtExpr SEMI ;
+ReturnStmt ::= RETURN StmtExpr:p {:RESULT = p;:} SEMI ;
 
 BreakStmt ::= BREAK SEMI ;
 
 PrintStmt ::= PRINT LPAR ExprPrint RPAR SEMI ;
 
-ExprPrint ::= ExprPrint COMMA Expr
-| Expr ;
+ExprPrint ::= ExprPrint:a COMMA Expr:b {:a = a.toString().concat(","+b.toString()); RESULT = a;:}
+| Expr:n {:RESULT=n.toString();:} ;
 
 Expr ::= LValue:v EQUALS Expr:e 
 {: 
@@ -211,7 +209,7 @@ Expr ::= LValue:v EQUALS Expr:e
 | LValue:e {: RESULT = e; :}
 | THIS
 | Call 
-| LPAR Expr RPAR
+| LPAR Expr:p RPAR {:RESULT = p;:}
 | Expr1:e1 PLUS Expr:e2 {: RESULT = e1 + "+" + e2; :}
 | Expr1:e1 MINUS Expr:e2 {: RESULT = e1 + "-" + e2; :}
 | Expr1:e1 TIMES Expr:e2 {: RESULT = e1 + "*" + e2; :}
@@ -240,7 +238,7 @@ LValue ::= IDENT:e {: RESULT = e; :}
 | Expr PERIOD IDENT
 | Expr LCOR Expr RCOR ;
 
-Call ::= IDENT LPAR Actuals RPAR 
+Call ::= IDENT:n {:if(!Env.get_name(n.toString(), "m")){ System.out.println("***WARNING*** ==> Método: " + n + " no ha sido declarado");}:} LPAR Actuals:n1 {:Env.tipos(n.toString(),n1.toString());:} RPAR 
 | Expr PERIOD IDENT CallCont
 | Expr PERIOD LibCall CallCont ;
 
@@ -249,11 +247,11 @@ CallCont ::= LPAR Actuals RPAR ;
 LibCall ::= GETBYTE LPAR Expr RPAR 
 | SETBYTE LPAR Expr COMMA Expr RPAR ;
 
-Actuals ::= ExprPrint
+Actuals ::= ExprPrint:n {:System.out.println(n); RESULT=n;:}
 | /* ε */ ;
 
-Constant ::= intConstant:e {: RESULT = e; :}
-| doubleConstant:e {: RESULT = e; :}
-| boolConstant
-| stringConstant:e {: RESULT = e; :}
-| NULL ;
+Constant ::= intConstant:e {: RESULT = e + "&int"; :}
+| doubleConstant:e {: RESULT = e + "&dob"; :}
+| boolConstant:e {: RESULT = e + "&bool"; :}
+| stringConstant:e {: RESULT = e + "&str"; :}
+| NULL {:RESULT = "&null"; :}  ;
