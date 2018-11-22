@@ -5,7 +5,9 @@
  */
 package minic;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import javax.swing.JFileChooser;
@@ -131,10 +133,45 @@ public class Main extends javax.swing.JFrame {
 
     public void AnalizarArchivo() throws IOException
     {
-        String[] ArchivoPrueba = {Ruta};
-        Sintaxis.main(ArchivoPrueba);        
+            String[] ArchivoPrueba = {Ruta};
+            String Valor;
+            Sintaxis.main(ArchivoPrueba);
+            FileWriter ef = new FileWriter("C:\\Users\\Ricardo\\Desktop\\SymbolTable.txt");
+            BufferedWriter e = new BufferedWriter(ef);
+            e.write("IDENTIFICADOR                 TIPO                DESCRIPCION         VALOR               AMBITO");
+            e.newLine();
+            for (int i = 0; i < Env.output.size(); i++) 
+            {
+               Salida aux = Env.output.get(i);
+               String Tipo = aux.simbolo.type;
+               String Descripcion = aux.simbolo.elementType;
+               if(aux.simbolo.value != null)
+               {
+                    Valor = aux.simbolo.value.toString();
+               }
+               else
+               {
+                   Valor = "??";
+               }
+               String Current = aux.simbolo.ambito;
+               e.write(aux.nombre + Salida(aux.nombre,30,0) + Tipo +Salida(Tipo, 50,30)+ Descripcion+Salida(Descripcion, 70,50)+Valor+Salida(Valor, 90,70)+Current);
+               e.newLine();
+            }
+            e.close();
+            ef.close();        
     }
-    
+ 
+public  String Salida(String size, int separador, int columnas)
+{
+            String nuevoEspacio = "";
+            int t = size.length();
+            int ciclos = separador - (t+columnas);
+            for (int i = 0; i < ciclos; i++) 
+            {
+                nuevoEspacio+=" ";
+            }
+            return nuevoEspacio;
+}
     
    /** METODOS DESHABILITADOS
     public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;

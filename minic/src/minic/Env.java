@@ -13,7 +13,7 @@ public class Env
     static Env root = new Env(null);
     static Env top = root;
     static HashMap m_table = new HashMap();
-    static ArrayList<Salida> t_salida = new ArrayList<>();
+    static ArrayList<Salida> output = new ArrayList<>();
     HashMap table;
     String Operacion;
     Env prev;
@@ -39,10 +39,10 @@ public class Env
             top.table.put(c, s);
             push();
             s = new Info();
-            s.ambito = "***GLOBAL***";
-            s.elementType = "***CLASE***";
+            s.ambito = "Main";
+            s.elementType = "Clase";
             Salida v_class =new Salida(c, s);
-            t_salida.add(v_class);
+            output.add(v_class);
             return 0;
         }
         if (!root.table.containsKey(sc))
@@ -60,10 +60,10 @@ public class Env
             top.table.put(c, s);
             push();
             s = new Info();
-            s.ambito = "***GLOBAL***";
-            s.elementType = "***CLASE***";
+            s.ambito = "Main";
+            s.elementType = "Clase";
             Salida v_class =new Salida(c, s);
-            t_salida.add(v_class);            
+            output.add(v_class);            
             return 0;
         }
     }
@@ -96,13 +96,13 @@ public class Env
                                            {
                                                     m_table.put(name, Data);
                                                     Salida out = new Salida(name.toString(), Data);
-                                                    t_salida.add(out);                                                    
+                                                    output.add(out);                                                    
                                              }
                                  }
                                  else
                                  {
                                         Salida out = new Salida(name.toString(), Data);
-                                        t_salida.add(out);
+                                        output.add(out);
                                  }
 }
             return true;
@@ -185,12 +185,12 @@ public class Env
                             aux.value = Resultado;
                             top.table.replace(Lvalue, aux);
                             System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Resultado + " -> Ambito Actual: "+top);
-                                    for (int i = 0; i < t_salida.size(); i++) 
+                                    for (int i = 0; i < output.size(); i++) 
                                     {
-                                            if (t_salida.get(i).nombre.compareTo(Lvalue)==0)
+                                            if (output.get(i).nombre.compareTo(Lvalue)==0)
                                             {
                                                 Salida element = new Salida(Lvalue, aux);
-                                                t_salida.set(i, element);
+                                                output.set(i, element);
                                                 break;
                                             }
                                       }                            
@@ -227,12 +227,12 @@ public class Env
                                 aux.value = Valor;
                                 top.table.replace(Lvalue, aux);            
                                 System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
-                                    for (int i = 0; i < t_salida.size(); i++) 
+                                    for (int i = 0; i < output.size(); i++) 
                                     {
-                                            if (t_salida.get(i).nombre.compareTo(Lvalue)==0)
+                                            if (output.get(i).nombre.compareTo(Lvalue)==0)
                                             {
                                                 Salida element = new Salida(Lvalue, aux);
-                                                t_salida.set(i, element);
+                                                output.set(i, element);
                                                 break;
                                             }
                                       }                    
@@ -261,12 +261,12 @@ public class Env
                                     aux.value = tmp.value;
                                     top.table.replace(Lvalue, aux.value);
                                     System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+aux.value + " -> Ambito Actual: "+top);
-                                    for (int i = 0; i < t_salida.size(); i++) 
+                                    for (int i = 0; i < output.size(); i++) 
                                     {
-                                            if (t_salida.get(i).nombre.compareTo(Lvalue)==0)
+                                            if (output.get(i).nombre.compareTo(Lvalue)==0)
                                             {
                                                 Salida element = new Salida(Lvalue, aux);
-                                                t_salida.set(i, element);
+                                                output.set(i, element);
                                                 break;
                                             }
                                       }                      
@@ -287,12 +287,12 @@ public class Env
                                      aux.value = Valor;
                                      top.table.replace(Lvalue, aux);            
                                      System.out.println("  Nuevo valor para el identificador "+Lvalue+ " -> Valor: "+Valor + " -> Ambito Actual: "+top);
-                                    for (int i = 0; i < t_salida.size(); i++) 
+                                    for (int i = 0; i < output.size(); i++) 
                                     {
-                                            if (t_salida.get(i).nombre.compareTo(Lvalue)==0)
+                                            if (output.get(i).nombre.compareTo(Lvalue)==0)
                                             {
                                                 Salida element = new Salida(Lvalue, aux);
-                                                t_salida.set(i, element);
+                                                output.set(i, element);
                                                 break;
                                             }
                                       }   
@@ -366,10 +366,10 @@ public class Env
           Info aux = (Info)m_table.get(id);
           aux.vars = formals.toString();
           m_table.replace(id, aux);
-          for (int i = 0; i < t_salida.size(); i++) {
-              if (t_salida.get(i).nombre.compareTo(id)==0) {
+          for (int i = 0; i < output.size(); i++) {
+              if (output.get(i).nombre.compareTo(id)==0) {
                   Salida element = new Salida(id, aux);
-                  t_salida.set(i, element);
+                  output.set(i, element);
                   break;
               }
           }
@@ -531,5 +531,7 @@ public class Env
       }
     
 }
+  
+
 
 }

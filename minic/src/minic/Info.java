@@ -26,9 +26,9 @@ public class Info {
     
     public Info()
     {
-        this.value = "N/A";
-        this.type = "N/A";
-        this.elementType = "N/A";        
+        this.value = "??";
+        this.type = "??";
+        this.elementType = "??";        
     }
     
    public String getType()

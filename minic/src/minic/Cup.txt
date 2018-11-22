@@ -85,7 +85,7 @@ Type ::= INT {: RESULT = "int"; :}
 
 FunctionDecl ::= FuncCont:n;
 
-FuncCont ::= Type:t IDENT:n {: if(!Env.put(n.toString(),"m",t)) {System.out.println("Nombre de metodo ya existe");} else {System.out.print(" METHOD ENTRY: "+n); Env.push();}:} LPAR Formals:p {:Env.parametros(n.toString(),p);:} RPAR StmtBlock:v {:Env.mreturn(t.toString(),v);System.out.print(" BLOCK EXIT"); Env.pop();System.out.print(" METHOD EXIT" +n); Env.pop();:} ;
+FuncCont ::= Type:t IDENT:n {: if(!Env.put(n.toString(),"m",t)) {System.out.println("Nombre de metodo ya existe");} else {System.out.print(" METHOD ENTRY: "+n); Env.push();}:} LPAR Formals:p {:Env.parametros(n.toString(),p);:} RPAR StmtBlock:v {:Env.mreturn(t.toString(),v);System.out.print(" BLOCK EXIT"); Env.pop();System.out.print(" METHOD EXIT " +n); Env.pop();:} ;
 
 Formals ::= FormalsCont:a Variable:b {: if(a==null){a="";a = a.toString().concat(b.toString());}else{a = a.toString().concat(b.toString());} RESULT = a; :}
 | /* ε */ ;
