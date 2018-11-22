@@ -68,15 +68,28 @@ public class Env
         }
     }
     
-    public static boolean getInterfaces(String I)
+    public static void getInterfaces(String I)
     {
-        if(!root.table.containsKey(I))
+        String[] Interfaces;
+        
+        if(I.contains(","))
         {
-            return false;
+            Interfaces = I.split(",");
+            
+            for(int i=0; i< Interfaces.length; i++)
+            {
+                if(!root.table.containsKey(Interfaces[i]))
+                {
+                   System.out.println("  La interfaz " + Interfaces[i] + " no existe en el ambito actual" + " -> Ambito Actual: "+top); 
+                }
+            }
         }
         else
         {
-            return true;
+            if(!root.table.containsKey(I))
+            {
+                System.out.println("  La interfaz " + I + " no existe en el ambito actual" + " -> Ambito Actual: "+top);
+            }
         }
     }
     
@@ -400,7 +413,7 @@ public class Env
                                 if (tipo_aux.compareTo(tipo_variable.type)!=0) {
                                     String out = t_var.get(i);
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ out + " no tiene al tipo de método necesario, se esperaba: "+out2+ "para: "+aux.vars);
+                                    System.out.println("El parámetro: "+ out + " no tiene al tipo de método necesario, se esperaba: "+out2+ "para: "+aux.vars);
                                 }                                    
                                 }
                                 else{
@@ -411,37 +424,37 @@ public class Env
                                         case "int":
                                             if (tipo_aux.compareTo("integer")!=0) {
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                
+                                    System.out.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                
                                             }
                                             break;
                                         case "str":
                                             if (tipo_aux.compareTo("string")!=0) {
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
+                                    System.out.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
                                                 
                                             }                                            
                                             break;
                                         case "dob":
                                             if (tipo_aux.compareTo("double")!=0) {
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                   
+                                    System.out.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                   
                                             }                                            
                                             break;
                                         case "null":
                                             if (tipo_aux.compareTo("null")!=0) {
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
+                                    System.out.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
                                             }                                            
                                             break;
                                         case "bool":
                                             if (tipo_aux.compareTo("boolean")!=0) {
                                     String out2 = tipo.get(1);
-                                    System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                  
+                                    System.out.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                  
                                             }                                            
                                             break;
                                         default:
                                             String out2 = tipo.get(i);
-                                            System.err.println("El termino: "+f+" no cumple con lo que esperaba el parametro del método, se esperaba: "+out2);
+                                            System.out.println("El termino: "+f+" no cumple con lo que esperaba el parametro del método, se esperaba: "+out2);
                                             break;
                                     }
                                 }
@@ -450,7 +463,7 @@ public class Env
             }
             }
             else{
-                System.err.println("El método: "+metodo+" ha sido invocado sin la cantidad de parametros necesitados");
+                System.out.println("El método: "+metodo+" ha sido invocado sin la cantidad de parametros necesitados");
             }
             
 
@@ -464,7 +477,7 @@ public class Env
                 if (top.table.containsKey(regreso)) {
           Info aux = (Info)top.table.get(regreso);
           if (tipo.toString().compareTo(aux.type)!=0) {
-              System.err.println("La instrucción return está tratando regresando: +"+aux.type+", se esperaba: "+tipo);
+              System.out.println("La instrucción return está tratando regresando: +"+aux.type+", se esperaba: "+tipo);
           }
       }
       else{
@@ -472,34 +485,34 @@ public class Env
            v_tipos.addAll(Arrays.asList(regreso.toString().split("&"))); 
           if (v_tipos.size()==1)
           {
-                   System.err.println("La variable:"+v_tipos.get(0)+" no ha sido declarada en el ámbito actual");
+                   System.out.println("La variable:"+v_tipos.get(0)+" no ha sido declarada en el ámbito actual");
            }
           else
           { 
           switch(v_tipos.get(1)){
               case "int":
                   if (tipo.toString().compareTo("integer")!=0) {
-                      System.err.println("La instrucción return está tratando regresando: Int, se esperaba: "+tipo);
+                      System.out.println("La instrucción return está tratando regresando: Int, se esperaba: "+tipo);
                   }
                   break;
               case "str":
                   if (tipo.toString().compareTo("string")!=0) {
-                      System.err.println("La instrucción return está tratando regresando: String, se esperaba: "+tipo);
+                      System.out.println("La instrucción return está tratando regresando: String, se esperaba: "+tipo);
                   }                  
                   break;
               case "dob":
                   if (tipo.toString().compareTo("double")!=0) {
-                      System.err.println("La instrucción return está tratando regresando: Double, se esperaba: "+tipo);
+                      System.out.println("La instrucción return está tratando regresando: Double, se esperaba: "+tipo);
                   }                  
                   break;
               case "null":
                   if (tipo.toString().compareTo("null")!=0) {
-                      System.err.println("La instrucción return está tratando regresando: Null, se esperaba: "+tipo);
+                      System.out.println("La instrucción return está tratando regresando: Null, se esperaba: "+tipo);
                   }                  
                   break;
               case "bool":
                   if (tipo.toString().compareTo("boolean")!=0) {
-                      System.err.println("La instrucción return está tratando regresando: Boolean, se esperaba: "+tipo);
+                      System.out.println("La instrucción return está tratando regresando: Boolean, se esperaba: "+tipo);
                   }                  
                   break;
                   default:

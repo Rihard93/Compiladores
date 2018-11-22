@@ -59,6 +59,8 @@ BOOLEANAS = true | false;
 "GetByte" { return symbol(sym.GETBYTE, yytext()); }
 "SetByte" { return symbol(sym.SETBYTE, yytext()); }
 "const" {return symbol(sym.CONSTANT, yytext()); }
+ "#" { /* Ignore */}
+"include" [^*] ~ ">" { /* Ignore */}
 
 /* IDENTIFICADORES */
 //[a-zA-Z][a-zA-Z0-9_]* {analizar=yytext(); linea=yyline; columna=yycolumn; return Identificador;}

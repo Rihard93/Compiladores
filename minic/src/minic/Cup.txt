@@ -125,27 +125,14 @@ Imp LLLAV ClassField RLLAV
 Ext ::= EXTENDS IDENT:n1 {: RESULT = n1; :}
 | /* ε */ ;
 
-Imp ::= IMPLEMENTS ImpID:e
+Imp ::= IMPLEMENTS ImpID:e 
+{:
+    Env.getInterfaces(e.toString());
+:}
 | /* ε */ ;
 
-ImpID ::= ImpID COMMA IDENT
-| IDENT:n3
-{:
-
-    if(n3 == null)
-    {
-        
-    }
-    else
-    {   
-        boolean R = Env.getInterfaces(n3.toString());
-
-        if(R == false)
-        {
-            System.out.println("  La interfaz " + n3 + " no existe en el ambito actual");
-        }
-    }
- :} ;
+ImpID ::= ImpID:e1 COMMA IDENT: e2 {: RESULT = e1 + "," + e2; :}
+| IDENT:n3 {: RESULT = n3; :} ;
 
 ClassField ::= ClassField Field
 | /* ε */ ;
