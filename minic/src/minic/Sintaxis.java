@@ -998,7 +998,7 @@ if(!Env.get_name(n.toString(), "m")){ System.out.println("***WARNING*** ==> Mét
           return CUP$Sintaxis$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 97: // Expr ::= NEWARRAY LPAR Expr COMMA Type RPAR 
+          case 97: // Expr ::= NEWARRAY LPAR Expr COMMA "" RPAR 
             {
               Object RESULT =null;
 
@@ -1972,7 +1972,7 @@ Env.parametros(n.toString(),p);
           case 12: // Type ::= INT 
             {
               Object RESULT =null;
-		 RESULT = "int"; 
+		 RESULT = "integer"; 
               CUP$Sintaxis$result = parser.getSymbolFactory().newSymbol("Type",4, ((java_cup.runtime.Symbol)CUP$Sintaxis$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintaxis$stack.peek()), RESULT);
             }
           return CUP$Sintaxis$result;

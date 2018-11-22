@@ -408,20 +408,20 @@ public class Env
                                     v_tipos.addAll(Arrays.asList(t_var.get(i).split("&")));
                                     int f = i+1;
                                     switch(v_tipos.get(1)){
-                                        case "integer":
+                                        case "int":
                                             if (tipo_aux.compareTo("integer")!=0) {
                                     String out2 = tipo.get(1);
                                     System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                
                                             }
                                             break;
-                                        case "string":
+                                        case "str":
                                             if (tipo_aux.compareTo("string")!=0) {
                                     String out2 = tipo.get(1);
                                     System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
                                                 
                                             }                                            
                                             break;
-                                        case "double":
+                                        case "dob":
                                             if (tipo_aux.compareTo("double")!=0) {
                                     String out2 = tipo.get(1);
                                     System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                   
@@ -433,7 +433,7 @@ public class Env
                                     System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                    
                                             }                                            
                                             break;
-                                        case "boolean":
+                                        case "bool":
                                             if (tipo_aux.compareTo("boolean")!=0) {
                                     String out2 = tipo.get(1);
                                     System.err.println("El parámetro: "+ f + " no cumple con la firma, se esperaba: "+out2+" para: "+aux.vars);                                                  

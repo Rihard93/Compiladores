@@ -131,7 +131,7 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAnalizarActionPerformed
 
-    public void AnalizarArchivo() throws IOException
+public void AnalizarArchivo() throws IOException
     {
             String[] ArchivoPrueba = {Ruta};
             String Valor;
@@ -172,6 +172,14 @@ public  String Salida(String size, int separador, int columnas)
             }
             return nuevoEspacio;
 }
+
+public class Analizar
+{
+    Analizar() throws IOException
+    {
+        AnalizarArchivo();
+    }
+    }
     
    /** METODOS DESHABILITADOS
     public void Archivos() //Metodo que obtiene la ruta actual y crea el archivo .out;
